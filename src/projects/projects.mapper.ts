@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   FindAllProjectsResponse,
   FindAllProjectsResponse__Project,
-} from '@/projects/projects.dto';
+} from '@/projects/projects.form';
 import { Project } from '@/projects/projects.entity';
 
 @Injectable()

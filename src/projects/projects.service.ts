@@ -1,11 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Project } from '@/projects/projects.entity';
+import { ProjectsMapper } from '@/projects/projects.mapper';
+import { Validation } from '@/utils/validation';
+import {
+  FindAllProjectsResponse,
+  FindProjectResponse,
+} from '@/projects/projects.response';
 import {
   CreateProjectRequest,
-  FindAllProjectsResponse,
-} from '@/projects/projects.dto';
-import { ProjectsMapper } from '@/projects/projects.mapper';
+  DeleteProjectRequest,
+  FindProjectRequest,
+  UpdateProjectRequest,
+} from '@/projects/projects.request';
 
 @Injectable()
 export class ProjectsService {
@@ -16,17 +23,41 @@ export class ProjectsService {
     private readonly projectsMapper: ProjectsMapper,
   ) {}
 
-  async createProject({ name }: CreateProjectRequest): Promise<string> {
+  async findAllProjects(): Promise<FindAllProjectsResponse> {
+    const projects = await this.dataSource.getRepository(Project).find();
+
+    return this.projectsMapper.toFindAllProjectsResponse(projects);
+  }
+
+  async findProject(request: FindProjectRequest): Promise<FindProjectResponse> {
+    const project = await this.dataSource
+      .getRepository(Project)
+      .findOneBy({ id: request.projectId });
+
+    if (!project) {
+      throw new NotFoundException('not found project');
+    }
+
+    return {
+      id: project.id,
+      name: project.name,
+      note: project.note,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+    };
+  }
+
+  async createProject(request: CreateProjectRequest): Promise<string> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const projectRepository = this.dataSource.getRepository(Project);
+      const projectRepository = queryRunner.manager.getRepository(Project);
 
       const project = projectRepository.create({
-        name,
+        name: request.name,
       });
 
       await projectRepository.save(project);
@@ -44,9 +75,75 @@ export class ProjectsService {
     }
   }
 
-  async findAllProjects(): Promise<FindAllProjectsResponse> {
-    const projects = await this.dataSource.getRepository(Project).find();
+  async updateProject(request: UpdateProjectRequest): Promise<void> {
+    await Validation.validate(request, UpdateProjectRequest);
 
-    return this.projectsMapper.toFindAllProjectsResponse(projects);
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const projectRepository = queryRunner.manager.getRepository(Project);
+
+      const project = await projectRepository.findOneBy({
+        id: request.projectId,
+      });
+
+      if (!project) {
+        throw new NotFoundException('not found project');
+      }
+
+      if (request.name !== undefined && request.name !== null) {
+        project.name = request.name;
+      }
+
+      if (request.note !== undefined && request.note !== null) {
+        project.note = request.note;
+      }
+
+      await projectRepository.save(project);
+
+      this.logger.log('Updated Project id: ' + project.id);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async deleteProject(request: DeleteProjectRequest): Promise<void> {
+    await Validation.validate(request, DeleteProjectRequest);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const projectRepository = queryRunner.manager.getRepository(Project);
+
+      const project = await projectRepository.findOneBy({
+        id: request.projectId,
+      });
+
+      if (!project) {
+        throw new NotFoundException('not found project');
+      }
+
+      await projectRepository.remove(project);
+
+      this.logger.log('Deleted Project id: ' + project.id);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
