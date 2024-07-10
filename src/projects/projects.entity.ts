@@ -17,6 +17,9 @@ export class Project {
   @Column({ name: 'name', type: 'text' })
   name: string;
 
+  @Column({ name: 'note', type: 'text', default: '' })
+  note: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

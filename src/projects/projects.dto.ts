@@ -21,6 +21,9 @@ export class FindAllProjectsResponse__Project {
   @ApiProperty({ description: '프로젝트 이름' })
   name: string;
 
+  @ApiProperty({ description: '프로젝트 노트' })
+  note: string;
+
   @ApiProperty({ description: '생성 일자' })
   createdAt: Date;
 

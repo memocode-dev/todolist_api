@@ -19,6 +19,7 @@ export class ProjectsMapper {
     return {
       id: project.id,
       name: project.name,
+      note: project.note,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
     };
