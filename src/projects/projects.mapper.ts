@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Project } from '@/projects/projects.entity';
 import {
   FindAllProjectsResponse,
   FindAllProjectsResponse__Project,
-} from '@/projects/projects.form';
-import { Project } from '@/projects/projects.entity';
+} from '@/projects/projects.response';
 
 @Injectable()
 export class ProjectsMapper {
@@ -19,7 +19,6 @@ export class ProjectsMapper {
     return {
       id: project.id,
       name: project.name,
-      note: project.note,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
     };
