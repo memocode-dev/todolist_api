@@ -25,6 +25,8 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package*.json ./
 
+COPY --from=build /app/.env.example ./.env.example
+
 # Install only production dependencies
 RUN npm install --production
 
