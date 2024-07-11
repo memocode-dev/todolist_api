@@ -3,16 +3,20 @@ import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateProjectRequest {
   @ApiProperty({ description: '프로젝트 이름' })
-  @IsUUID()
+  @IsNotEmpty({
+    message: 'PROJECT_NAME_EMPTY:project name cannot be an empty string',
+  })
   name: string;
 }
 
 export class UpdateProjectRequest {
-  @IsUUID()
+  @IsUUID(4, { message: 'PROJECT_ID_NOT_UUID:project is not uuid' })
   projectId: string;
 
   @IsOptional()
-  @IsNotEmpty({ message: 'name cannot be an empty string' })
+  @IsNotEmpty({
+    message: 'PROJECT_NAME_EMPTY:project name cannot be an empty string',
+  })
   name?: string;
 
   @IsOptional()
@@ -20,11 +24,11 @@ export class UpdateProjectRequest {
 }
 
 export class FindProjectRequest {
-  @IsUUID()
+  @IsUUID(4, { message: 'PROJECT_ID_NOT_UUID:project is not uuid' })
   projectId: string;
 }
 
 export class DeleteProjectRequest {
-  @IsUUID()
+  @IsUUID(4, { message: 'PROJECT_ID_NOT_UUID:project is not uuid' })
   projectId: string;
 }

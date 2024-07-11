@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Project } from '@/projects/projects.entity';
 import { ProjectsMapper } from '@/projects/projects.mapper';
-import { Validation } from '@/utils/validation';
+import { Validation } from '@/common/utils/validation';
 import {
   FindAllProjectsResponse,
   FindProjectResponse,
@@ -30,6 +30,8 @@ export class ProjectsService {
   }
 
   async findProject(request: FindProjectRequest): Promise<FindProjectResponse> {
+    await Validation.validate(request, FindProjectRequest);
+
     const project = await this.dataSource
       .getRepository(Project)
       .findOneBy({ id: request.projectId });
@@ -48,6 +50,8 @@ export class ProjectsService {
   }
 
   async createProject(request: CreateProjectRequest): Promise<string> {
+    await Validation.validate(request, CreateProjectRequest);
+
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();

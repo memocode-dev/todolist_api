@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { join } from 'path';
-import { CustomLogger } from '@/utils/typeorm-logging';
-import config from '@/config';
+import { CustomLogger } from '@/common/utils/typeorm-logging';
+import config from '@/common/config';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -14,6 +14,6 @@ export const AppDataSource = new DataSource({
   logger: new CustomLogger({ enabled: true, language: 'postgresql' }),
   migrationsTableName: 'migrations',
   migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+  entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
   migrationsRun: config.node.env === 'prod',
 });
