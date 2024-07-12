@@ -24,7 +24,11 @@ export class ProjectsService {
   ) {}
 
   async findAllProjects(): Promise<FindAllProjectsResponse> {
-    const projects = await this.dataSource.getRepository(Project).find();
+    const projects = await this.dataSource.getRepository(Project).find({
+      order: {
+        createdAt: 'ASC',
+      },
+    });
 
     return this.projectsMapper.toFindAllProjectsResponse(projects);
   }

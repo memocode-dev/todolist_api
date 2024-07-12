@@ -76,10 +76,17 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
         validationError.constraints,
       )[0].split(':', 2);
 
-      response.status(HttpStatus.BAD_REQUEST).json({
-        code,
-        message,
-      });
+      if (!code || !message) {
+        response.status(HttpStatus.BAD_REQUEST).json({
+          code: 'VALIDATION_ERROR',
+          message: Object.values(validationError.constraints)[0],
+        });
+      } else {
+        response.status(HttpStatus.BAD_REQUEST).json({
+          code,
+          message,
+        });
+      }
     } else {
       const errorCode = exception.getResponse() as ErrorCode;
       response.status(HttpStatus.BAD_REQUEST).json(errorCode);

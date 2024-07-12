@@ -18,7 +18,8 @@ import {
   FindProjectResponse,
 } from '@/projects/projects.response';
 import { CreateProjectRequest } from '@/projects/projects.request';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FindAllTasksResponse } from '@/tasks/tasks.reseponse';
 
 @ApiTags('projects')
 @Controller('/projects')
@@ -27,13 +28,19 @@ export class ProjectsController {
 
   @Get()
   @ApiOperation({ summary: '프로젝트 전체 조회' })
+  @ApiOkResponse({
+    type: FindAllProjectsResponse,
+  })
   async findAllProjects(): Promise<FindAllProjectsResponse> {
     return this.projectsService.findAllProjects();
   }
 
   @Get('/:projectId')
   @ApiOperation({ summary: '프로젝트 단건 조회' })
-  async findProjectResponse(
+  @ApiOkResponse({
+    type: FindProjectResponse,
+  })
+  async findProject(
     @Param('projectId') projectId: string,
   ): Promise<FindProjectResponse> {
     return this.projectsService.findProject({ projectId: projectId });

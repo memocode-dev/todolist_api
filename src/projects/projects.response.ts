@@ -5,10 +5,6 @@ export class CreateProjectResponse {
   id: string;
 }
 
-export class FindAllProjectsResponse {
-  content: FindAllProjectsResponse__Project[];
-}
-
 export class FindAllProjectsResponse__Project {
   @ApiProperty({ description: '프로젝트 ID' })
   id: string;
@@ -21,6 +17,15 @@ export class FindAllProjectsResponse__Project {
 
   @ApiProperty({ description: '수정 일자' })
   updatedAt: Date;
+}
+
+export class FindAllProjectsResponse {
+  @ApiProperty({
+    type: FindAllProjectsResponse__Project,
+    isArray: true,
+    description: '프로젝트 전체 조회 내용',
+  })
+  content: FindAllProjectsResponse__Project[];
 }
 
 export class FindProjectResponse {

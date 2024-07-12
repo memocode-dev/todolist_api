@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateProjectRequest {
   @ApiProperty({ description: '프로젝트 이름' })
@@ -20,6 +20,7 @@ export class UpdateProjectRequest {
   name?: string;
 
   @IsOptional()
+  @IsString()
   note?: string;
 }
 

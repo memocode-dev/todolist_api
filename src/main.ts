@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { INestApplication } from '@nestjs/common';
-import { Express } from 'express';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { Express, json, urlencoded } from 'express';
 import {
   BadRequestExceptionFilter,
   ForbiddenExceptionFilter,
@@ -33,6 +33,17 @@ async function bootstrap() {
     new NotFoundExceptionFilter(),
     new InternalServerErrorExceptionFilter(),
   );
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  app.enableCors({
+    origin: true,
+    credentials: true,
+    exposedHeaders: ['Location'],
+  });
+
+  app.use(json({ limit: '100mb' }));
+  app.use(urlencoded({ limit: '100mb', extended: true }));
 
   await app.listen(9090);
 }
