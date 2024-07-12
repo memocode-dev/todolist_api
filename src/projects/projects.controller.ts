@@ -19,7 +19,6 @@ import {
 } from '@/projects/projects.response';
 import { CreateProjectRequest } from '@/projects/projects.request';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { FindAllTasksResponse } from '@/tasks/tasks.reseponse';
 
 @ApiTags('projects')
 @Controller('/projects')

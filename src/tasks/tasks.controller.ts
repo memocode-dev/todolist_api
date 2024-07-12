@@ -10,12 +10,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TasksService } from '@/tasks/tasks.service';
 import { Response } from 'express';
 import { CreateProjectResponse } from '@/projects/projects.response';

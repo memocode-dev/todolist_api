@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TaskStatus } from '@/tasks/tasks.entity';
-import { Type } from 'class-transformer';
 
 export class FindAllTasksResponse__Task {
   @ApiProperty({ description: '테스크 ID' })
