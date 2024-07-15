@@ -2,11 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Task } from '@/tasks/tasks.entity';
 
 @Entity('projects')
 export class Project {
@@ -36,7 +34,4 @@ export class Project {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
-
-  @OneToMany(() => Task, (task) => task.project, { lazy: true })
-  tasks: Promise<Task[]>;
 }

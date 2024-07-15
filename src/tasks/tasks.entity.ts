@@ -45,7 +45,7 @@ export class Task {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Project, (project) => project.tasks)
+  @ManyToOne(() => Project)
   @JoinColumn({
     name: 'project_id',
     foreignKeyConstraintName: 'FK_tasks_project_id',
